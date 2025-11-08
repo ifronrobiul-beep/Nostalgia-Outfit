@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nostalgia Outfit - Curated Men's Fashion</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- Load Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --color-primary: #1c1c1c; /* Deep Charcoal */
+            --color-secondary: #d6d3d1; /* Stone/Cream */
+            --color-accent: #b91c1c; /* Dark Red Accent */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--color-primary);
+            background-color: #f7f7f7;
+            /* Prevents scrollbar from jumping when modal is open */
+        }
+        /* Custom button styling for the nostalgic, cool vibe */
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s, transform 0.1s;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+        .btn-primary:hover {
+            background-color: #000;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .product-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Styles for the Payment Modal (copied from your request) */
+        .input-style {
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            width: 100%;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .input-style:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            outline: none;
+        }
+        .payment-option {
+            cursor: pointer;
+            border: 2px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+        .payment-option.selected {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.1);
+        }
+        /* User Menu Dropdown Styling */
+        .group:hover .group-hover\:block {
+            display: block;
+        }
+        /* Dashboard Sidebar Active Link */
+        .dashboard-nav-item.active {
+            background-color: #e0e7ff; /* Light indigo for active state */
+            color: #4f46e5; /* Indigo-600 for active text */
+            font-weight: 600;
+        }
+        /* Admin specific styles */
+        .admin-nav-item.active {
+            background-color: #1f2937; /* Darker gray for active admin link */
+            color: white;
+            font-weight: 600;
+        }
+        .admin-nav-item:hover {
+            background-color: #374151;
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-black tracking-widest text-gray-900 uppercase">
+                Nostalgia Outfit
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                <a href="#hero" class="text-gray-900 hover:text-gray-600 transition duration-150">Home</a>
+                <a href="#categories" class="text-gray-900 hover:text-gray-600 transition duration-150">Categories</a>
+                <a href="#featured" class="text-gray-900 hover:text-gray-600 transition duration-150">New Arrivals</a>
+                <a href="#about" class="text-gray-900 hover:text-gray-600 transition duration-150">About</a>
+            </nav>
+
+            <!-- Icons (Search, Auth Status, Cart, Admin) -->
+            <div class="flex items-center space-x-4">
+
+                <!-- New Search Input Button (Always Visible) -->
+                <button aria-label="Search" class="text-gray-600 hover:text-gray-900 p-1 rounded-full hover:bg-gray-100">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                </button>
+
+                <!-- Authentication/User Status Container (Dynamic) -->
+                <div id="auth-status-container" class="flex items-center space-x-3">
+                    <!-- Renders Auth Buttons or User/Logout Links -->
+                    <button onclick="showAuthModal('login')" class="text-gray-700 hover:text-gray-900 text-sm font-medium hidden sm:block">Log In</button>
+                    <button onclick="showAuthModal('signup')" class="btn-primary py-2 px-4 text-xs">Sign Up</button>
+                </div>
+
+                <button aria-label="Cart" id="cart-button" onclick="showCartModal()" class="text-gray-600 hover:text-gray-900 relative">
+                    <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                    <span id="cart-item-count" class="absolute -top-1 -right-1 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">0</span>
+                </button>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-600 hover:text-gray-900">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
+            <a href="#hero" class="block py-3 px-6 text-gray-700 hover:bg-gray-50">Home</a>
+            <a href="#categories" class="block py-3 px-6 text-gray-700 hover:bg-gray-50">Categories</a>
+            <a href="#featured" class="block py-3 px-6 text-gray-700 hover:bg-gray-50">New Arrivals</a>
+            <a href="#about" class="block py-3 px-6 text-gray-700 hover:bg-gray-50">About</a>
+            <!-- Mobile Auth Links (Will be dynamically added by JS on initial load if logged out) -->
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. Hero Section -->
+        <section id="hero" class="relative bg-gray-100 h-[60vh] md:h-[80vh] flex items-center overflow-hidden">
+            <!-- Background Image Placeholder (Modern/Aesthetic) -->
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://placehold.co/1200x800/222222/cccccc?text=Curated+Style'); opacity: 0.8;"></div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-white">
+                <div class="max-w-xl p-8 rounded-xl bg-black bg-opacity-40 backdrop-blur-sm">
+                    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
+                        The New Vintage.
+                    </h1>
+                    <p class="text-xl md:text-2xl font-light mb-6 text-gray-200">
+                        Modern silhouettes meet timeless materials. Curated for the next generation of nostalgia.
+                    </p>
+                    <a href="#featured" class="btn-primary inline-block">Shop The Collection</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Core Categories Section -->
+        <section id="categories" class="py-16 md:py-24 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-900">
+                    Shop By Vibe
+                </h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                    <!-- Category 1: Jackets & Outerwear -->
+                    <a href="#" class="group block relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                        <img src="https://placehold.co/400x500/a3a3a3/ffffff?text=JACKETS" alt="Jackets" class="w-full h-full object-cover aspect-[4/5] group-hover:scale-[1.02] transition duration-500">
+                        <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-40 transition"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <h3 class="text-2xl font-semibold text-white">Jackets</h3>
+                            <p class="text-sm text-gray-200">Timeless Outerwear</p>
+                        </div>
+                    </a>
+
+                    <!-- Category 2: Shirts & Knits -->
+                    <a href="#" class="group block relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                        <img src="https://placehold.co/400x500/525252/ffffff?text=SHIRTS" alt="Shirts" class="w-full h-72 object-cover aspect-[4/5] group-hover:scale-[1.02] transition duration-500">
+                        <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-40 transition"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <h3 class="text-2xl font-semibold text-white">Shirts</h3>
+                            <p class="text-sm text-gray-200">Linen & Oxford</p>
+                        </div>
+                    </a>
+
+                    <!-- Category 3: Denim & Trousers -->
+                    <a href="#" class="group block relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                        <img src="https://placehold.co/400x500/737373/ffffff?text=DENIM" alt="Denim" class="w-full h-72 object-cover aspect-[4/5] group-hover:scale-[1.02] transition duration-500">
+                        <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-40 transition"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <h3 class="text-2xl font-semibold text-white">Denim</h3>
+                            <p class="text-sm text-gray-200">Washed & Raw</p>
+                        </div>
+                    </a>
+
+                    <!-- Category 4: Accessories & Footwear -->
+                    <a href="#" class="group block relative overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition duration-300">
+                        <img src="https://placehold.co/400x500/404040/ffffff?text=ACCESSORIES" alt="Accessories" class="w-full h-72 object-cover">
+                        <div class="absolute inset-0 bg-black bg-opacity-30 group-hover:bg-opacity-40 transition"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <h3 class="text-2xl font-semibold text-white">Accents</h3>
+                            <p class="text-sm text-gray-200">Bags & Watches</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Featured Products Section -->
+        <section id="featured" class="py-16 md:py-24 bg-gray-50">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-900">
+                    New Arrivals
+                </h2>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    
+                    <!-- Product Card 1: The Essential Knit -->
+                    <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden" data-id="knit01" data-name="Essential Knit" data-price="89.00">
+                        <a href="#" class="block">
+                            <img src="https://placehold.co/600x800/383838/ffffff?text=Essential+Knit" alt="Essential Knit Sweater" class="w-full h-72 object-cover">
+                        </a>
+                        <div class="p-4 md:p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-1 truncate">The Essential Knit</h3>
+                            <p class="text-sm text-gray-500 mb-3">Shirts & Knits</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-gray-900">$89.00</span>
+                                <button onclick="addToCart('knit01', 'Essential Knit', 89.00)" class="text-gray-700 hover:text-red-700 transition duration-150 p-2 rounded-full hover:bg-gray-100" aria-label="Add to cart">
+                                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 2: Heritage Selvedge Denim -->
+                    <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden" data-id="denim02" data-name="Heritage Selvedge" data-price="145.00">
+                        <a href="#" class="block">
+                            <img src="https://placehold.co/600x800/1e293b/ffffff?text=Selvedge+Denim" alt="Heritage Selvedge Denim" class="w-full h-72 object-cover">
+                        </a>
+                        <div class="p-4 md:p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-1 truncate">Heritage Selvedge</h3>
+                            <p class="text-sm text-gray-500 mb-3">Denim & Trousers</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-gray-900">$145.00</span>
+                                <button onclick="addToCart('denim02', 'Heritage Selvedge', 145.00)" class="text-gray-700 hover:text-red-700 transition duration-150 p-2 rounded-full hover:bg-gray-100" aria-label="Add to cart">
+                                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 3: Urban Commuter Jacket -->
+                    <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden" data-id="jacket03" data-name="Urban Commuter Jacket" data-price="210.00">
+                        <a href="#" class="block">
+                            <img src="https://placehold.co/600x800/6b7280/ffffff?text=Commuter+Jacket" alt="Urban Commuter Jacket" class="w-full h-72 object-cover">
+                        </a>
+                        <div class="p-4 md:p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-1 truncate">Urban Commuter Jacket</h3>
+                            <p class="text-sm text-gray-500 mb-3">Jackets & Outerwear</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-gray-900">$210.00</span>
+                                <button onclick="addToCart('jacket03', 'Urban Commuter Jacket', 210.00)" class="text-gray-700 hover:text-red-700 transition duration-150 p-2 rounded-full hover:bg-gray-100" aria-label="Add to cart">
+                                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 4: Minimalist Leather Wallet -->
+                    <div class="product-card bg-white rounded-xl shadow-lg overflow-hidden" data-id="acc04" data-name="Leather Bi-Fold" data-price="55.00">
+                        <a href="#" class="block">
+                            <img src="https://placehold.co/600x800/404040/ffffff?text=Leather+Wallet" alt="Minimalist Leather Wallet" class="w-full h-72 object-cover">
+                        </a>
+                        <div class="p-4 md:p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-1 truncate">Leather Bi-Fold</h3>
+                            <p class="text-sm text-gray-500 mb-3">Accessories</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-gray-900">$55.00</span>
+                                <button onclick="addToCart('acc04', 'Leather Bi-Fold', 55.00)" class="text-gray-700 hover:text-red-700 transition duration-150 p-2 rounded-full hover:bg-gray-100" aria-label="Add to cart">
+                                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div class="text-center mt-12">
+                    <button onclick="showCartModal()" class="inline-block border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white transition duration-300 py-3 px-8 rounded-full font-medium">View All Products</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 4. Call to Action / Email Signup -->
+        <section id="about" class="bg-gray-900 text-white py-16 md:py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl md:text-5xl font-extrabold mb-4">
+                    Join The Legacy
+                </h2>
+                <p class="text-lg mb-8 max-w-2xl mx-auto text-gray-300">
+                    Sign up for our newsletter to get early access to limited edition drops and 10% off your first order.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <input type="email" placeholder="Enter your email address" class="w-full sm:w-80 p-3 rounded-lg border-2 border-gray-700 bg-gray-800 text-white focus:ring-red-600 focus:border-red-600">
+                    <button class="btn-primary bg-red-700 hover:bg-red-800 border-none">Subscribe</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 border-b border-gray-700 pb-8 mb-8">
+                <!-- Brand Info -->
+                <div class="col-span-2 md:col-span-1">
+                    <h4 class="text-xl font-black mb-4">Nostalgia Outfit</h4>
+                    <p class="text-sm text-gray-400">Curated, timeless style for the modern man.</p>
+                </div>
+                
+                <!-- Shop Links -->
+                <div>
+                    <h4 class="font-semibold mb-4 text-lg">Shop</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">New Arrivals</a></li>
+                        <li><a href="#" class="hover:text-white">Jackets</a></li>
+                        <li><a href="#" class="hover:text-white">Shirts</a></li>
+                        <li><a href="#" class="hover:text-white">Denim</a></li>
+                        <li><a href="#" class="hover:text-white">Accessories</a></li>
+                    </ul>
+                </div>
+
+                <!-- Company Links -->
+                <div>
+                    <h4 class="font-semibold mb-4 text-lg">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#about" class="hover:text-white">About Us</a></li>
+                        <li><a href="#" class="hover:text-white">Careers</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                        <li><a href="#" class="hover:text-white">Press</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h4 class="font-semibold mb-4 text-lg">Help</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white">Returns & Exchanges</a></li>
+                        <li><a href="#" class="hover:text-white">Shipping</a></li>
+                        <li><a href="#" class="hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Social Media -->
+                <div class="col-span-2 md:col-span-1">
+                    <h4 class="font-semibold mb-4 text-lg">Connect</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" aria-label="Instagram" class="text-gray-400 hover:text-white"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                        <a href="#" aria-label="Twitter" class="text-gray-400 hover:text-white"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                        <a href="#" aria-label="Facebook" class="text-gray-400 hover:text-white"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center text-sm text-gray-500 pt-4">
+                &copy; <span id="current-year"></span> Nostalgia Outfit. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- 5. Full-Screen Modal for Cart and Checkout -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-[100] p-4 transition-opacity duration-300">
+        <div id="checkout-container" class="w-full max-w-2xl bg-white rounded-xl shadow-2xl overflow-y-auto max-h-[90vh] transition-all duration-500 transform scale-95 opacity-0">
+            
+            <!-- Header for Modal -->
+            <div class="flex justify-between items-center p-6 border-b border-gray-100 sticky top-0 bg-white z-10">
+                <h2 class="text-2xl font-bold text-gray-900" id="checkout-title">Shopping Cart</h2>
+                <button onclick="hideCartModal()" class="text-gray-500 hover:text-gray-800 p-2 rounded-full hover:bg-gray-100">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <!-- Dynamic Content Viewport -->
+            <div id="checkout-view" class="p-6">
+                <!-- Content will be rendered here by JavaScript: cart list, payment form, or confirmation -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Auth Modal for Login/Signup -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-[110] p-4 transition-opacity duration-300">
+        <div id="auth-container" class="w-full max-w-md bg-white rounded-xl shadow-2xl transition-all duration-500 transform scale-95 opacity-0">
+            
+            <!-- Header for Auth Modal -->
+            <div class="flex justify-between items-center p-6 border-b border-gray-100">
+                <h2 class="text-2xl font-bold text-gray-900" id="auth-title">Sign In</h2>
+                <button onclick="hideAuthModal()" class="text-gray-500 hover:text-gray-800 p-2 rounded-full hover:bg-gray-100">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <!-- Dynamic Auth Viewport -->
+            <div id="auth-view" class="p-8">
+                <!-- Auth content rendered here by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Dashboard Modal (Customer) -->
+    <div id="dashboard-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-[120] p-4 transition-opacity duration-300">
+        <div id="dashboard-container" class="w-full max-w-4xl h-full md:max-h-[90vh] bg-white rounded-xl shadow-2xl transition-all duration-500 transform scale-95 opacity-0 flex flex-col md:flex-row overflow-hidden">
+            
+            <!-- Sidebar Navigation (Hidden on small screens) -->
+            <div class="w-full md:w-64 bg-gray-50 p-6 flex-shrink-0 border-r border-gray-100 overflow-y-auto">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 border-b pb-3">My Account</h3>
+                <nav class="space-y-1" id="dashboard-nav-sidebar">
+                    <button onclick="setDashboardView('profile')" class="dashboard-nav-item w-full text-left p-3 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center transition duration-150" data-title="My Profile">
+                        <i data-lucide="user-circle" class="w-5 h-5 mr-3"></i> My Profile
+                    </button>
+                    <button onclick="setDashboardView('addresses')" class="dashboard-nav-item w-full text-left p-3 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center transition duration-150" data-title="Address Book">
+                        <i data-lucide="map-pin" class="w-5 h-5 mr-3"></i> Address Book
+                    </button>
+                    <button onclick="setDashboardView('orders')" class="dashboard-nav-item w-full text-left p-3 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center transition duration-150" data-title="My Orders">
+                        <i data-lucide="package" class="w-5 h-5 mr-3"></i> My Orders
+                    </button>
+                    <button onclick="setDashboardView('returns')" class="dashboard-nav-item w-full text-left p-3 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center transition duration-150" data-title="My Returns">
+                        <i data-lucide="undo" class="w-5 h-5 mr-3"></i> My Returns
+                    </button>
+                    <button onclick="setDashboardView('cancellations')" class="dashboard-nav-item w-full text-left p-3 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center transition duration-150" data-title="My Cancellations">
+                        <i data-lucide="x-circle" class="w-5 h-5 mr-3"></i> My Cancellations
+                    </button>
+                    <div class="border-t my-3"></div>
+                    <button onclick="setDashboardView('payments')" class="dashboard-nav-item w-full text-left p-3 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center transition duration-150" data-title="My Payment Options">
+                        <i data-lucide="credit-card" class="w-5 h-5 mr-3"></i> My Payment Options
+                    </button>
+                    <button onclick="setDashboardView('wallet')" class="dashboard-nav-item w-full text-left p-3 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center transition duration-150" data-title="KongShop Wallet">
+                        <i data-lucide="wallet" class="w-5 h-5 mr-3"></i> KongShop Wallet
+                    </button>
+                    <div class="border-t my-3"></div>
+                    <button onclick="setDashboardView('reviews')" class="dashboard-nav-item w-full text-left p-3 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center transition duration-150" data-title="My Reviews">
+                        <i data-lucide="star" class="w-5 h-5 mr-3"></i> My Reviews
+                    </button>
+                    <button onclick="setDashboardView('wishlist')" class="dashboard-nav-item w-full text-left p-3 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center transition duration-150" data-title="Wishlist">
+                        <i data-lucide="heart" class="w-5 h-5 mr-3"></i> Wishlist
+                    </button>
+                    <button onclick="setDashboardView('sell')" class="dashboard-nav-item w-full text-left p-3 rounded-lg text-gray-700 hover:bg-gray-100 flex items-center transition duration-150" data-title="Sell On Nostalgia Outfit">
+                        <i data-lucide="store" class="w-5 h-5 mr-3"></i> Sell On Nostalgia Outfit
+                    </button>
+                    <div class="border-t my-6"></div>
+                    <button onclick="handleLogout(); hideDashboardModal();" class="w-full text-left p-3 rounded-lg text-red-600 hover:bg-red-50 flex items-center font-medium transition duration-150">
+                        <i data-lucide="log-out" class="w-5 h-5 mr-3"></i> Log Out
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="flex-grow p-6 md:p-8 overflow-y-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 id="dashboard-content-title" class="text-3xl font-extrabold text-gray-900">Dashboard</h1>
+                    <button onclick="hideDashboardModal()" class="text-gray-500 hover:text-gray-800 p-2 rounded-full md:hidden">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                
+                <div id="dashboard-content">
+                    <!-- Dashboard views will be rendered here by JS -->
+                </div>
+            </div>
+
+            <!-- Close button for large screens -->
+            <button onclick="hideDashboardModal()" class="absolute top-4 right-4 text-gray-600 hover:text-gray-900 p-2 rounded-full hidden md:block z-10">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 8. Admin Panel Modal (NEW) -->
+    <div id="admin-modal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-[130] p-4 transition-opacity duration-300">
+        <div id="admin-container" class="w-full max-w-6xl h-full md:max-h-[95vh] bg-white rounded-xl shadow-2xl transition-all duration-500 transform scale-95 opacity-0 flex flex-col md:flex-row overflow-hidden">
+            
+            <!-- Admin Sidebar Navigation -->
+            <div class="w-full md:w-64 bg-gray-900 text-white p-6 flex-shrink-0 border-r border-gray-700 overflow-y-auto">
+                <h3 class="text-xl font-bold mb-8 text-red-400">Admin Panel</h3>
+                <nav class="space-y-1" id="admin-nav-sidebar">
+                    <button onclick="setAdminView('dashboard')" class="admin-nav-item w-full text-left p-3 rounded-lg text-gray-300 hover:bg-gray-800 flex items-center transition duration-150" data-title="Overview Dashboard">
+                        <i data-lucide="layout-grid" class="w-5 h-5 mr-3"></i> Dashboard
+                    </button>
+                    <button onclick="setAdminView('orders')" class="admin-nav-item w-full text-left p-3 rounded-lg text-gray-300 hover:bg-gray-800 flex items-center transition duration-150" data-title="Order Management">
+                        <i data-lucide="package" class="w-5 h-5 mr-3"></i> Orders
+                    </button>
+                    <button onclick="setAdminView('products')" class="admin-nav-item w-full text-left p-3 rounded-lg text-gray-300 hover:bg-gray-800 flex items-center transition duration-150" data-title="Product Catalog (CRUD)">
+                        <i data-lucide="t-shirt" class="w-5 h-5 mr-3"></i> Products
+                    </button>
+                    <button onclick="setAdminView('categories')" class="admin-nav-item w-full text-left p-3 rounded-lg text-gray-300 hover:bg-gray-800 flex items-center transition duration-150" data-title="Category Management">
+                        <i data-lucide="list" class="w-5 h-5 mr-3"></i> Categories
+                    </button>
+                    <div class="border-t border-gray-700 my-3"></div>
+                    <button onclick="setAdminView('content')" class="admin-nav-item w-full text-left p-3 rounded-lg text-gray-300 hover:bg-gray-800 flex items-center transition duration-150" data-title="Site Content Editor">
+                        <i data-lucide="pencil" class="w-5 h-5 mr-3"></i> Site Content
+                    </button>
+                    <div class="border-t border-gray-700 my-6"></div>
+                    <button onclick="handleLogout(); hideAdminModal();" class="w-full text-left p-3 rounded-lg text-red-400 hover:bg-gray-800 flex items-center font-medium transition duration-150">
+                        <i data-lucide="log-out" class="w-5 h-5 mr-3"></i> Close Admin
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Admin Main Content Area -->
+            <div class="flex-grow p-6 md:p-8 bg-gray-50 overflow-y-auto">
+                <div class="flex justify-between items-center mb-6 border-b pb-4">
+                    <h1 id="admin-content-title" class="text-3xl font-extrabold text-gray-900">Admin Dashboard</h1>
+                    <button onclick="hideAdminModal()" class="text-gray-500 hover:text-gray-800 p-2 rounded-full md:hidden">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                
+                <div id="admin-content">
+                    <!-- Admin views will be rendered here by JS -->
+                </div>
+            </div>
+
+            <!-- Close button for large screens -->
+            <button onclick="hideAdminModal()" class="absolute top-4 right-4 text-gray-200 hover:text-white p-2 rounded-full hidden md:block z-10">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- Address/Payment Modal (for Add/Edit functions) -->
+    <div id="sub-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden items-center justify-center z-[140] p-4 transition-opacity duration-300">
+        <div id="sub-modal-content" class="w-full max-w-lg bg-white rounded-xl shadow-2xl transition-all duration-500 transform scale-95 opacity-0">
+            <div class="flex justify-between items-center p-6 border-b border-gray-100">
+                <h2 class="text-xl font-bold text-gray-900" id="sub-modal-title">Edit Address</h2>
+                <button onclick="hideSubModal()" class="text-gray-500 hover:text-gray-800 p-2 rounded-full hover:bg-gray-100">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div id="sub-modal-body" class="p-6">
+                <!-- Content injected here -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Message Box Modal (for alerts) -->
+    <div id="message-box" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-[150] transition-opacity duration-300">
+        <div class="bg-white p-6 rounded-lg shadow-2xl max-w-sm w-full">
+            <h3 id="message-title" class="text-xl font-bold mb-3 text-red-600">Error</h3>
+            <p id="message-content" class="text-gray-700 mb-4"></p>
+            <button onclick="hideMessageBox()" class="w-full bg-gray-200 text-gray-800 p-2 rounded-lg font-semibold hover:bg-gray-300 transition duration-150">Close</button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Global DOM References ---
+        const CART_MODAL = document.getElementById('cart-modal');
+        const CHECKOUT_CONTAINER = document.getElementById('checkout-container');
+        const CHECKOUT_VIEW = document.getElementById('checkout-view');
+        const CHECKOUT_TITLE = document.getElementById('checkout-title');
+        const DASHBOARD_MODAL = document.getElementById('dashboard-modal');
+        const DASHBOARD_CONTAINER = document.getElementById('dashboard-container');
+        const DASHBOARD_CONTENT = document.getElementById('dashboard-content');
+        const DASHBOARD_TITLE = document.getElementById('dashboard-content-title');
+        const SUB_MODAL = document.getElementById('sub-modal');
+        const SUB_MODAL_TITLE = document.getElementById('sub-modal-title');
+        const SUB_MODAL_BODY = document.getElementById('sub-modal-body');
+        const ADMIN_MODAL = document.getElementById('admin-modal');
+        const ADMIN_CONTAINER = document.getElementById('admin-container');
+        const ADMIN_CONTENT = document.getElementById('admin-content');
+        const ADMIN_TITLE = document.getElementById('admin-content-title');
+
+
+        // --- Core State Management ---
+        let user = { 
+            isLoggedIn: false, 
+            username: 'FashionGuru', 
+            email: 'user@nostalgia.com',
+            phone: '555-123-4567',
+            marketing: true,
+            isAdmin: true // Set to TRUE initially for easy testing of the new Admin Panel
+        };
+        let authState = 'login'; // 'login' | 'signup'
+        let userDashboardState = 'profile'; // Default customer dashboard view
+        let adminDashboardState = 'dashboard'; // Default admin dashboard view
+
+        let cart = []; // Empty cart
+        
+        let paymentState = {
+            view: 'cart', 
+            paymentMethod: 'card', 
+            orderDetails: {
+                total: 0,
+                itemCount: 0,
+                orderId: '',
+                paymentMethodDisplay: 'Credit/Debit Card'
+            }
+        };
+
+        // --- Mock Data ---
+        let mockData = {
+            walletBalance: 250.75,
+            walletHistory: [
+                { id: 1, type: 'Top-up', amount: 100.00, date: '2025-10-01' },
+                { id: 2, type: 'Purchase', amount: -45.50, date: '2025-10-15' },
+                { id: 3, type: 'Refund', amount: 20.00, date: '2025-10-20' },
+            ],
+            addresses: [
+                { id: 1, type: 'Shipping', name: 'Home Address', street: '123 Vintage Rd', city: 'Metroville', zip: '10001', default: true },
+                { id: 2, type: 'Billing', name: 'Work Address', street: '45 Modern Ave', city: 'Tech City', zip: '90210', default: false }
+            ],
+            paymentOptions: [
+                { id: 1, type: 'Visa', last4: '4242', expiry: '12/26' },
+                { id: 2, type: 'Mastercard', last4: '1010', expiry: '05/27' },
+                { id: 3, type: 'bKash (Simulated)', last4: '5555', expiry: '' }
+            ],
+            orders: [
+                { id: 'NO-2025-5421', date: '2025-10-25', total: 145.00, status: 'Delivered', items: 2 },
+                { id: 'NO-2025-5455', date: '2025-11-01', total: 89.00, status: 'Shipped', items: 1 },
+                { id: 'NO-2025-5499', date: '2025-11-05', total: 210.00, status: 'Processing', items: 3 },
+            ],
+            returns: [
+                { id: 'RMA-9001', orderId: 'NO-2025-5421', date: '2025-11-01', status: 'Pending Approval', reason: 'Wrong size' },
+            ],
+            cancellations: [
+                { id: 'CNCL-101', orderId: 'NO-2025-5400', date: '2025-10-10', reason: 'Duplicate order' },
+            ],
+            // --- Admin Mock Data ---
+            adminStats: {
+                totalRevenue: 82650.00,
+                totalOrders: 1645,
+                totalCustomers: 1462,
+                pendingOrders: 117,
+                completedOrders: 1500,
+                canceledOrders: 28,
+            },
+            products: [
+                { id: 'knit01', name: 'The Essential Knit', price: 89.00, stock: 150, category: 'Shirts & Knits', image: 'https://placehold.co/600x800/383838/ffffff?text=Essential+Knit' },
+                { id: 'denim02', name: 'Heritage Selvedge', price: 145.00, stock: 85, category: 'Denim & Trousers', image: 'https://placehold.co/600x800/1e293b/ffffff?text=Selvedge+Denim' },
+                { id: 'jacket03', name: 'Urban Commuter Jacket', price: 210.00, stock: 35, category: 'Jackets & Outerwear', image: 'https://placehold.co/600x800/6b7280/ffffff?text=Commuter+Jacket' },
+                { id: 'acc04', name: 'Leather Bi-Fold', price: 55.00, stock: 220, category: 'Accessories', image: 'https://placehold.co/600x800/404040/ffffff?text=Leather+Wallet' },
+            ],
+            categories: [
+                { id: 1, name: 'Jackets & Outerwear', slug: 'jackets' },
+                { id: 2, name: 'Shirts & Knits', slug: 'shirts' },
+                { id: 3, name: 'Denim & Trousers', slug: 'denim' },
+                { id: 4, name: 'Accessories', slug: 'accessories' },
+            ],
+        };
+
+        // --- Utility Functions ---
+
+        function updateCartCount() {
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cart-item-count').textContent = count;
+            paymentState.orderDetails.itemCount = count;
+        }
+
+        function calculateCartTotals() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            const shipping = subtotal > 150 ? 0.00 : 15.00;
+            const total = subtotal + shipping;
+            
+            paymentState.orderDetails.subtotal = subtotal;
+            paymentState.orderDetails.shipping = shipping;
+            paymentState.orderDetails.total = parseFloat(total.toFixed(2));
+            
+            return { subtotal, shipping, total };
+        }
+
+        function showMessageBox(title, content, isError = false) {
+            document.getElementById('message-title').textContent = title;
+            document.getElementById('message-content').textContent = content;
+            document.getElementById('message-title').classList.toggle('text-red-600', isError);
+            document.getElementById('message-title').classList.toggle('text-green-600', !isError && title.includes('Success'));
+            document.getElementById('message-box').classList.remove('hidden');
+            document.getElementById('message-box').classList.add('flex');
+        }
+
+        function hideMessageBox() {
+            document.getElementById('message-box').classList.add('hidden');
+            document.getElementById('message-box').classList.remove('flex');
+        }
+        
+        // FIX: Moved showSubModal and hideSubModal to the utility section
+        function showSubModal(title, contentHtml) {
+            SUB_MODAL_TITLE.textContent = title;
+            SUB_MODAL_BODY.innerHTML = contentHtml;
+            
+            SUB_MODAL.classList.remove('hidden');
+            SUB_MODAL.classList.add('flex');
+            setTimeout(() => {
+                document.getElementById('sub-modal-content').classList.remove('scale-95', 'opacity-0');
+                document.getElementById('sub-modal-content').classList.add('scale-100', 'opacity-100');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function hideSubModal() {
+            document.getElementById('sub-modal-content').classList.remove('scale-100', 'opacity-100');
+            document.getElementById('sub-modal-content').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                SUB_MODAL.classList.add('hidden');
+                SUB_MODAL.classList.remove('flex');
+            }, 300);
+        }
+
+        function generateOrderId() {
+            const timestamp = Date.now().toString(36).toUpperCase();
+            const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+            return `NO-${timestamp.slice(-4)}${random}`;
+        }
+
+        // --- Auth/User Handlers (Moved to top) ---
+
+        function updateHeaderAuthUI() {
+            const container = document.getElementById('auth-status-container');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            // Clear previous content
+            container.innerHTML = '';
+            mobileMenu.innerHTML = `
+                <a href="#hero" class="block py-3 px-6 text-gray-700 hover:bg-gray-50">Home</a>
+                <a href="#categories" class="block py-3 px-6 text-gray-700 hover:bg-gray-50">Categories</a>
+                <a href="#featured" class="block py-3 px-6 text-gray-700 hover:bg-gray-50">New Arrivals</a>
+                <a href="#about" class="block py-3 px-6 text-gray-700 hover:bg-gray-50">About</a>
+            `;
+
+            if (user.isLoggedIn) {
+                // 1. Logged In View (My Account, Logout, Admin Panel)
+                const adminLink = user.isAdmin ? 
+                    `<button onclick="showAdminModal()" class="text-red-600 hover:text-red-800 text-sm font-medium hidden sm:block">Admin Panel</button>` : '';
+
+                container.innerHTML = `
+                    ${adminLink}
+                    <div class="group relative">
+                        <button aria-label="User Menu" class="flex items-center space-x-1 text-gray-700 hover:text-gray-900 transition duration-150 p-1 rounded-full hover:bg-gray-100">
+                            <i data-lucide="user" class="w-5 h-5"></i>
+                            <span class="hidden md:inline font-medium text-sm">${user.username}</span>
+                        </button>
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 hidden group-hover:block z-20 border border-gray-100">
+                            <button onclick="showDashboardModal('profile')" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"><i data-lucide="user-circle" class="w-4 h-4 mr-2"></i> My Account</button>
+                            <div class="border-t my-1"></div>
+                            <button onclick="handleLogout()" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center"><i data-lucide="log-out" class="w-4 h-4 mr-2"></i> Log Out</button>
+                        </div>
+                    </div>
+                `;
+                
+                // 2. Mobile Logged In Links
+                if (user.isAdmin) {
+                    mobileMenu.innerHTML += `<button onclick="showAdminModal()" class="block py-3 px-6 text-red-700 hover:bg-red-50 w-full text-left font-medium">Admin Panel</button>`;
+                }
+                mobileMenu.innerHTML += `
+                    <button onclick="showDashboardModal('profile')" class="block py-3 px-6 text-gray-700 hover:bg-gray-50 w-full text-left">My Account</button>
+                    <button onclick="handleLogout()" class="block py-3 px-6 text-red-600 hover:bg-red-50 w-full text-left font-medium">Log Out</button>
+                `;
+
+            } else {
+                // 3. Logged Out View (Login, Signup)
+                container.innerHTML = `
+                    <button onclick="showAuthModal('login')" class="text-gray-700 hover:text-gray-900 text-sm font-medium hidden sm:block">Log In</button>
+                    <button onclick="showAuthModal('signup')" class="btn-primary py-2 px-4 text-xs">Sign Up</button>
+                `;
+                // 4. Mobile Logged Out Links
+                 mobileMenu.innerHTML += `
+                    <button onclick="showAuthModal('login')" class="block py-3 px-6 text-gray-700 hover:bg-gray-50 w-full text-left">Log In</button>
+                    <button onclick="showAuthModal('signup')" class="block py-3 px-6 text-gray-700 hover:bg-gray-50 w-full text-left">Sign Up</button>
+                `;
+            }
+            // Re-initialize icons
+            lucide.createIcons();
+        }
+
+        function renderAuthUI() {
+            const authView = document.getElementById('auth-view');
+            const authTitle = document.getElementById('auth-title');
+            
+            if (authState === 'login') {
+                authTitle.textContent = 'Sign In';
+                authView.innerHTML = `
+                    <form onsubmit="event.preventDefault(); handleLogin();" class="space-y-6">
+                        <h3 class="text-lg font-semibold text-gray-700">Welcome back!</h3>
+                        <div>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="login-email" class="input-style" placeholder="you@example.com" value="user@nostalgia.com" required>
+                        </div>
+                        <div>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                            <input type="password" id="login-password" class="input-style" placeholder="••••••••" value="123456" required>
+                            <a href="#" onclick="showMessageBox('Note', 'Simulated password reset functionality', false)" class="block text-xs text-right mt-1 text-blue-600 hover:text-blue-800">Forgot Password?</a>
+                        </div>
+                        <button type="submit" class="btn-primary w-full p-3 text-lg font-semibold bg-red-600 hover:bg-red-700 transition duration-150">
+                            Sign In
+                        </button>
+                        <p class="text-center text-sm text-gray-500">
+                            Don't have an account? 
+                            <button type="button" onclick="switchAuthView('signup')" class="text-blue-600 hover:text-blue-800 font-medium">Sign Up</button>
+                        </p>
+                    </form>
+                `;
+            } else if (authState === 'signup') {
+                authTitle.textContent = 'Sign Up';
+                authView.innerHTML = `
+                    <form onsubmit="event.preventDefault(); handleSignup();" class="space-y-6">
+                        <h3 class="text-lg font-semibold text-gray-700">Create your account</h3>
+                        <div>
+                            <label for="signup-email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" id="signup-email" class="input-style" placeholder="you@example.com" required>
+                        </div>
+                        <div>
+                            <label for="signup-password" class="block text-sm font-medium text-gray-700 mb-1">Password (min 6 chars)</label>
+                            <input type="password" id="signup-password" class="input-style" placeholder="••••••••" minlength="6" required>
+                        </div>
+                        <div>
+                            <label for="signup-confirm-password" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                            <input type="password" id="signup-confirm-password" class="input-style" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-primary w-full p-3 text-lg font-semibold bg-green-600 hover:bg-green-700 transition duration-150">
+                            Sign Up
+                        </button>
+                        <p class="text-center text-sm text-gray-500">
+                            Already have an account? 
+                            <button type="button" onclick="switchAuthView('login')" class="text-blue-600 hover:text-blue-800 font-medium">Sign In</button>
+                        </p>
+                    </form>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        function showAuthModal(initialView = 'login') {
+            authState = initialView;
+            renderAuthUI();
+
+            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('auth-modal').classList.add('flex');
+            setTimeout(() => {
+                document.getElementById('auth-container').classList.remove('scale-95', 'opacity-0');
+                document.getElementById('auth-container').classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function hideAuthModal() {
+            document.getElementById('auth-container').classList.remove('scale-100', 'opacity-100');
+            document.getElementById('auth-container').classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                document.getElementById('auth-modal').classList.add('hidden');
+                document.getElementById('auth-modal').classList.remove('flex');
+            }, 300);
+        }
+
+        function switchAuthView(view) {
+            authState = view;
+            renderAuthUI();
+        }
+
+        function handleLogin() {
+            const emailInput = document.getElementById('login-email');
+            const passwordInput = document.getElementById('login-password');
+            const email = emailInput.value;
+            const password = passwordInput.value;
+
+            if (email.length > 0 && password.length > 0) {
+                user.isLoggedIn = true;
+                user.email = email;
+                user.username = email.split('@')[0]; 
+                
+                // Simulate admin role based on email for testing purposes
+                user.isAdmin = (email === 'admin@nostalgia.com'); 
+                
+                updateHeaderAuthUI();
+                hideAuthModal();
+                showMessageBox("Welcome Back!", `You are now logged in as ${user.username}.`);
+                
+                // CRITICAL FIX: If the user was trying to pay, reopen the payment modal now.
+                if (localStorage.getItem('pendingCheckout')) {
+                    localStorage.removeItem('pendingCheckout');
+                    showCartModal(); // This will default to 'cart' view, but the user can click 'Proceed to Payment' again immediately.
+                    // For better UX, we'll manually jump to payment if they logged in successfully.
+                    goToPayment();
+                }
+
+            } else {
+                showMessageBox("Login Failed", "Please enter valid email and password.", true);
+            }
+        }
+
+        function handleSignup() {
+            const emailInput = document.getElementById('signup-email');
+            const passwordInput = document.getElementById('signup-password');
+            const confirmPasswordInput = document.getElementById('signup-confirm-password');
+
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (password !== confirmPassword) {
+                showMessageBox("Signup Failed", "Passwords do not match.", true);
+                return;
+            }
+
+            if (email.length > 0 && password.length >= 6) {
+                user.isLoggedIn = true;
+                user.email = email;
+                user.username = email.split('@')[0]; 
+                
+                user.isAdmin = (email === 'admin@nostalgia.com'); 
+
+                updateHeaderAuthUI();
+                hideAuthModal();
+                showMessageBox("Account Created!", `Welcome to Nostalgia Outfit, ${user.username}! You are now logged in.`, false);
+                
+                // CRITICAL FIX: If the user was trying to pay, reopen the payment modal now.
+                if (localStorage.getItem('pendingCheckout')) {
+                    localStorage.removeItem('pendingCheckout');
+                    showCartModal(); // This will default to 'cart' view, but the user can click 'Proceed to Payment' again immediately.
+                    // For better UX, we'll manually jump to payment if they logged in successfully.
+                    goToPayment();
+                }
+
+            } else {
+                showMessageBox("Signup Failed", "Please enter a valid email and a password of at least 6 characters.", true);
+            }
+        }
+
+        function handleLogout() {
+            user.isLoggedIn = false;
+            user.username = null;
+            user.email = null;
+            user.isAdmin = false; // Reset admin status on logout
+            updateHeaderAuthUI();
+            showMessageBox("Logged Out", "You have been successfully logged out.", false);
+        }
+
+
+        // --- CUSTOMER DASHBOARD Handlers ---
+
+        function showDashboardModal(initialView = 'profile') {
+            if (!user.isLoggedIn) {
+                showMessageBox("Access Denied", "Please sign in to view your dashboard.", true);
+                showAuthModal('login');
+                return;
+            }
+            setDashboardView(initialView);
+
+            DASHBOARD_MODAL.classList.remove('hidden');
+            DASHBOARD_MODAL.classList.add('flex');
+            document.body.classList.add('overflow-hidden'); // Disable background scroll
+
+            setTimeout(() => {
+                DASHBOARD_CONTAINER.classList.remove('scale-95', 'opacity-0');
+                DASHBOARD_CONTAINER.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function hideDashboardModal() {
+            DASHBOARD_CONTAINER.classList.remove('scale-100', 'opacity-100');
+            DASHBOARD_CONTAINER.classList.add('scale-95', 'opacity-0');
+            document.body.classList.remove('overflow-hidden');
+
+            setTimeout(() => {
+                DASHBOARD_MODAL.classList.add('hidden');
+                DASHBOARD_MODAL.classList.remove('flex');
+            }, 300);
+        }
+
+        function setDashboardView(view) {
+            userDashboardState = view;
+            renderDashboardUI();
+        }
+        
+        function renderDashboardUI() {
+            // Remove active class from all nav items
+            document.querySelectorAll('.dashboard-nav-item').forEach(btn => btn.classList.remove('active'));
+            
+            // Find the active button and update its class and the title
+            const activeBtn = document.querySelector(`.dashboard-nav-item[onclick*="setDashboardView('${userDashboardState}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                // Use the data-title attribute for the main content title for consistency
+                DASHBOARD_TITLE.textContent = activeBtn.getAttribute('data-title') || activeBtn.textContent.trim();
+            }
+
+            switch(userDashboardState) {
+                case 'profile':
+                    renderProfileView();
+                    break;
+                case 'addresses':
+                    renderAddressesView();
+                    break;
+                case 'orders':
+                    renderOrdersView();
+                    break;
+                case 'payments':
+                    renderPaymentsView();
+                    break;
+                case 'wallet':
+                    renderWalletView();
+                    break;
+                case 'returns':
+                    renderReturnsCancellationsView('returns');
+                    break;
+                case 'cancellations':
+                    renderReturnsCancellationsView('cancellations');
+                    break;
+                default:
+                    // Placeholder views (reviews, wishlist, sell)
+                    DASHBOARD_CONTENT.innerHTML = `
+                        <div class="bg-gray-100 p-6 rounded-lg text-center">
+                            <h3 class="text-xl font-semibold mb-2">${DASHBOARD_TITLE.textContent}</h3>
+                            <p class="text-gray-600">This feature is coming soon! Stay tuned for updates on our user interaction features.</p>
+                        </div>
+                    `;
+                    break;
+            }
+            lucide.createIcons();
+        }
+        
+        // --- ADMIN DASHBOARD Handlers (NEW) ---
+
+        function showAdminModal() {
+            if (!user.isAdmin) {
+                showMessageBox("Access Denied", "You do not have permission to view the Admin Panel.", true);
+                return;
+            }
+            setAdminView('dashboard');
+            
+            ADMIN_MODAL.classList.remove('hidden');
+            ADMIN_MODAL.classList.add('flex');
+            document.body.classList.add('overflow-hidden');
+
+            setTimeout(() => {
+                ADMIN_CONTAINER.classList.remove('scale-95', 'opacity-0');
+                ADMIN_CONTAINER.classList.add('scale-100', 'opacity-100');
+            }, 10);
+            lucide.createIcons();
+        }
+
+        function hideAdminModal() {
+            ADMIN_CONTAINER.classList.remove('scale-100', 'opacity-100');
+            ADMIN_CONTAINER.classList.add('scale-95', 'opacity-0');
+            document.body.classList.remove('overflow-hidden');
+
+            setTimeout(() => {
+                ADMIN_MODAL.classList.add('hidden');
+                ADMIN_MODAL.classList.remove('flex');
+            }, 300);
+        }
+
+        function setAdminView(view) {
+            adminDashboardState = view;
+            renderAdminUI();
+        }
+
+        function renderAdminUI() {
+            // Remove active class from all nav items
+            document.querySelectorAll('.admin-nav-item').forEach(btn => btn.classList.remove('active'));
+            
+            // Find the active button and update its class and the title
+            const activeBtn = document.querySelector(`.admin-nav-item[onclick*="setAdminView('${adminDashboardState}')"]`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                ADMIN_TITLE.textContent = activeBtn.getAttribute('data-title') || activeBtn.textContent.trim();
+            }
+
+            switch(adminDashboardState) {
+                case 'dashboard':
+                    renderAdminDashboard();
+                    break;
+                case 'orders':
+                    renderAdminOrders();
+                    break;
+                case 'products':
+                    renderAdminProducts();
+                    break;
+                case 'categories':
+                    renderAdminCategories();
+                    break;
+                case 'content':
+                    renderAdminContent();
+                    break;
+                default:
+                    ADMIN_CONTENT.innerHTML = `<p class="p-4 text-center text-gray-500">Select an option from the sidebar.</p>`;
+                    break;
+            }
+            lucide.createIcons();
+        }
+        
+        // Admin View Renderers
+
+        function renderAdminDashboard() {
+            const stats = mockData.adminStats;
+            ADMIN_CONTENT.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                    <!-- Total Revenue Card -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-indigo-500">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-lg font-medium text-gray-500">Total Revenue</h4>
+                            <i data-lucide="dollar-sign" class="w-6 h-6 text-indigo-500"></i>
+                        </div>
+                        <p class="text-4xl font-extrabold text-gray-900 mt-2">$${stats.totalRevenue.toLocaleString()}</p>
+                        <p class="text-sm text-green-500 mt-2">▲ 11% last 30 days</p>
+                    </div>
+
+                    <!-- Total Order Card -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-blue-500">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-lg font-medium text-gray-500">Total Orders</h4>
+                            <i data-lucide="shopping-bag" class="w-6 h-6 text-blue-500"></i>
+                        </div>
+                        <p class="text-4xl font-extrabold text-gray-900 mt-2">${stats.totalOrders.toLocaleString()}</p>
+                        <p class="text-sm text-green-500 mt-2">▲ 11% last 30 days</p>
+                    </div>
+
+                    <!-- Total Customers Card -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-green-500">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-lg font-medium text-gray-500">Total Customers</h4>
+                            <i data-lucide="users" class="w-6 h-6 text-green-500"></i>
+                        </div>
+                        <p class="text-4xl font-extrabold text-gray-900 mt-2">${stats.totalCustomers.toLocaleString()}</p>
+                        <p class="text-sm text-red-500 mt-2">▼ 0.7% last 30 days</p>
+                    </div>
+                    
+                    <!-- Pending Orders Card -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border-t-4 border-yellow-500">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-lg font-medium text-gray-500">Pending Orders</h4>
+                            <i data-lucide="clock" class="w-6 h-6 text-yellow-500"></i>
+                        </div>
+                        <p class="text-4xl font-extrabold text-gray-900 mt-2">${stats.pendingOrders.toLocaleString()}</p>
+                        <p class="text-sm text-gray-500 mt-2">Action required</p>
+                    </div>
+                </div>
+
+                <!-- Sales Analytic Placeholder -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800">Sales Analytics (Mock Graph)</h3>
+                    <div class="h-64 flex items-center justify-center bg-gray-100 rounded-lg border-dashed border-2 border-gray-300">
+                        <p class="text-gray-500">Graph Placeholder: Monthly Revenue Trend</p>
+                    </div>
+                </div>
+
+                <!-- Top Selling Products Placeholder -->
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800">Top Selling Products (Last 30 Days)</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                        ${mockData.products.slice(0, 4).map(p => `
+                            <div class="border p-3 rounded-lg text-center">
+                                <img src="${p.image}" alt="${p.name}" class="w-full h-24 object-cover mb-2 rounded-lg">
+                                <p class="font-medium text-sm truncate">${p.name}</p>
+                                <p class="text-xs text-gray-500">Stock: ${p.stock}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function renderAdminOrders() {
+            const allOrders = mockData.orders.map(order => ({
+                ...order,
+                customer: user.username,
+                shipping: order.status === 'Delivered' ? 'Express' : 'Standard'
+            }));
+
+            const statusColors = {
+                'Processing': 'bg-yellow-100 text-yellow-700',
+                'Shipped': 'bg-blue-100 text-blue-700',
+                'Delivered': 'bg-green-100 text-green-700',
+                'Cancelled': 'bg-red-100 text-red-700',
+            };
+
+            const orderRows = allOrders.map(order => `
+                <tr class="hover:bg-gray-50 border-b">
+                    <td class="px-6 py-4 font-medium text-gray-900">${order.id}</td>
+                    <td class="px-6 py-4 text-gray-600">${order.customer}</td>
+                    <td class="px-6 py-4 text-gray-600">$${order.total.toFixed(2)}</td>
+                    <td class="px-6 py-4 text-gray-600">${order.date}</td>
+                    <td class="px-6 py-4">
+                        <span class="text-xs font-semibold px-2 py-1 rounded-full ${statusColors[order.status] || 'bg-gray-100 text-gray-700'}">${order.status}</span>
+                    </td>
+                    <td class="px-6 py-4 space-x-2">
+                        <select onchange="updateOrderStatus('${order.id}', this.value)" class="p-1 border rounded-md text-sm bg-white">
+                            <option value="">Update Status</option>
+                            <option value="Shipped">Ship</option>
+                            <option value="Delivered">Complete</option>
+                            <option value="Cancelled">Cancel</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+
+            ADMIN_CONTENT.innerHTML = `
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800">All Orders (${allOrders.length})</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                ${orderRows || '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No recent orders.</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        function renderAdminProducts() {
+            const products = mockData.products;
+            const productListHtml = products.map(p => `
+                <div class="bg-white p-4 rounded-xl shadow-lg border border-gray-100 flex items-center justify-between gap-4">
+                    <img src="${p.image}" alt="${p.name}" class="w-16 h-16 object-cover rounded-md flex-shrink-0">
+                    <div class="flex-grow min-w-0">
+                        <p class="font-semibold text-gray-900 truncate">${p.name}</p>
+                        <p class="text-sm text-gray-500">Price: $${p.price.toFixed(2)} | Stock: ${p.stock}</p>
+                    </div>
+                    <div class="flex space-x-2 flex-shrink-0">
+                        <button onclick="showProductModal('${p.id}', true)" class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50"><i data-lucide="edit-3" class="w-5 h-5"></i></button>
+                        <button onclick="deleteProduct('${p.id}')" class="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-50"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
+            ADMIN_CONTENT.innerHTML = `
+                <div class="space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-bold text-gray-800">Product Catalog (${products.length})</h3>
+                        <button onclick="showProductModal(null)" class="btn-primary bg-green-600 hover:bg-green-700 text-sm px-4 py-2 flex items-center">
+                           <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i> Add New Product
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        ${productListHtml}
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+        
+        function renderAdminCategories() {
+            const categories = mockData.categories;
+            const categoryListHtml = categories.map(c => `
+                <div class="bg-white p-4 rounded-xl shadow-lg border border-gray-100 flex items-center justify-between">
+                    <span class="font-medium text-gray-800">${c.name}</span>
+                    <p class="text-sm text-gray-500">Slug: ${c.slug}</p>
+                </div>
+            `).join('');
+
+            ADMIN_CONTENT.innerHTML = `
+                <div class="space-y-6 max-w-xl">
+                    <h3 class="text-xl font-bold text-gray-800">Manage Categories (${categories.length})</h3>
+                    <div class="bg-white p-5 rounded-xl shadow-md border-t-4 border-indigo-500">
+                        <h4 class="font-bold mb-3 text-gray-700">Add New Category</h4>
+                        <form onsubmit="event.preventDefault(); handleAddCategory(this);">
+                            <input type="text" id="new-category-name" class="input-style mb-3" placeholder="Category Name (e.g., Summer Collection)" required>
+                            <button type="submit" class="btn-primary bg-indigo-600 hover:bg-indigo-700 p-2 w-full text-sm">Add Category</button>
+                        </form>
+                    </div>
+                    <div class="space-y-3">
+                        ${categoryListHtml}
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+        
+        function renderAdminContent() {
+            ADMIN_CONTENT.innerHTML = `
+                <div class="space-y-6">
+                    <h3 class="text-xl font-bold text-gray-800">Site Content Editor</h3>
+                    <div class="bg-white p-5 rounded-xl shadow-md space-y-4">
+                        <h4 class="font-bold text-gray-700">Homepage Banner Text</h4>
+                        <textarea id="banner-text" class="input-style" rows="3">The New Vintage. Modern silhouettes meet timeless materials. Curated for the next generation of nostalgia.</textarea>
+                        
+                        <h4 class="font-bold text-gray-700">About Us Page Snippet</h4>
+                        <textarea id="about-text" class="input-style" rows="5">Nostalgia Outfit is dedicated to merging classic design with modern quality. We believe style should be timeless, focusing on durable fabrics and simple, elegant cuts. Our mission is to reduce fast fashion waste by offering pieces built to last.</textarea>
+
+                        <p class="text-xs text-gray-500">Note: Changes are simulated and will not persist on refresh.</p>
+                        <button onclick="showMessageBox('Content Saved', 'Site content changes have been saved!', false)" class="btn-primary bg-blue-600 hover:bg-blue-700 p-3 w-full">Save All Content</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- ADMIN CRUD LOGIC (Placeholder/Simulated) ---
+
+        function updateOrderStatus(id, newStatus) {
+            if (!newStatus) return;
+            const order = mockData.orders.find(o => o.id === id);
+            if (order) {
+                order.status = newStatus;
+                showMessageBox("Order Status Updated", `Order ${id} is now set to "${newStatus}".`, false);
+                renderAdminOrders(); // Re-render table
+            }
+        }
+        
+        function handleAddCategory(form) {
+            const name = document.getElementById('new-category-name').value.trim();
+            if (!name) {
+                showMessageBox("Error", "Category name cannot be empty.", true);
+                return;
+            }
+            const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+            const newId = mockData.categories.length > 0 ? Math.max(...mockData.categories.map(c => c.id)) + 1 : 1;
+
+            mockData.categories.push({ id: newId, name, slug });
+            showMessageBox("Success", `Category "${name}" added.`, false);
+            renderAdminCategories();
+        }
+
+        let currentProductEditId = null;
+
+        function showProductModal(id = null, isEdit = false) {
+            currentProductEditId = id;
+            const product = id ? mockData.products.find(p => p.id === id) : {};
+            const title = isEdit ? `Edit Product: ${product.name}` : "Add New Product";
+            
+            const content = `
+                <form onsubmit="event.preventDefault(); saveProductChanges();" class="space-y-4">
+                    <input type="hidden" id="product-id" value="${id || ''}">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                        <input type="text" id="product-name" class="input-style" value="${product.name || ''}" required>
+                    </div>
+
+                    <div class="flex space-x-4">
+                        <div class="w-1/2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
+                            <input type="number" id="product-price" class="input-style" value="${product.price || ''}" step="0.01" required>
+                        </div>
+                        <div class="w-1/2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
+                            <input type="number" id="product-stock" class="input-style" value="${product.stock || ''}" min="0" required>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <select id="product-category" class="input-style">
+                            ${mockData.categories.map(c => `<option value="${c.name}" ${product.category === c.name ? 'selected' : ''}>${c.name}</option>`).join('')}
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Image URL (Placeholder)</label>
+                        <input type="text" id="product-image" class="input-style" value="${product.image || 'https://placehold.co/600x800/d6d3d1/1c1c1c?text=New+Item'}">
+                    </div>
+
+                    <button type="submit" class="btn-primary bg-indigo-600 hover:bg-indigo-700 p-3 w-full">${isEdit ? 'Save Changes' : 'Add Product'}</button>
+                </form>
+            `;
+            showSubModal(title, content);
+        }
+
+        function saveProductChanges() {
+            const id = document.getElementById('product-id').value || null;
+            const name = document.getElementById('product-name').value;
+            const price = parseFloat(document.getElementById('product-price').value);
+            const stock = parseInt(document.getElementById('product-stock').value);
+            const category = document.getElementById('product-category').value;
+            const image = document.getElementById('product-image').value;
+
+            if (!name || isNaN(price) || isNaN(stock)) {
+                showMessageBox("Validation Error", "Please fill out all product fields correctly.", true);
+                return;
+            }
+
+            if (id) {
+                // Edit
+                const index = mockData.products.findIndex(p => p.id === id);
+                if (index !== -1) {
+                    mockData.products[index] = { ...mockData.products[index], name, price, stock, category, image };
+                    showMessageBox("Success", `Product "${name}" updated.`, false);
+                }
+            } else {
+                // Add New
+                const newId = 'prod' + (mockData.products.length + 1);
+                mockData.products.push({ id: newId, name, price, stock, category, image });
+                showMessageBox("Success", `Product "${name}" added to catalog.`, false);
+            }
+
+            hideSubModal();
+            renderAdminProducts();
+        }
+
+        function deleteProduct(id) {
+             const name = mockData.products.find(p => p.id === id)?.name;
+             if (confirm(`Are you sure you want to delete "${name}"? This action cannot be undone.`)) {
+                mockData.products = mockData.products.filter(p => p.id !== id);
+                showMessageBox("Product Deleted", `Product "${name}" has been permanently removed.`, false);
+                renderAdminProducts();
+            }
+        }
+        
+        // --- CUSTOMER DASHBOARD View Renderers (Definitions moved to global scope) ---
+
+        function renderProfileView() {
+            DASHBOARD_CONTENT.innerHTML = `
+                <div class="max-w-xl mx-auto">
+                    <form onsubmit="event.preventDefault(); handleSaveProfile();" class="space-y-6 bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-bold border-b pb-2 text-gray-700">Personal Information</h3>
+                        <div>
+                            <label for="profile-name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                            <input type="text" id="profile-name" class="input-style" value="${user.username}" required>
+                        </div>
+                        <div>
+                            <label for="profile-email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="profile-email" class="input-style bg-gray-50 cursor-not-allowed" value="${user.email}" disabled>
+                        </div>
+                        <div>
+                            <label for="profile-phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                            <input type="tel" id="profile-phone" class="input-style" value="${user.phone}">
+                        </div>
+                        <div class="flex items-center pt-4 border-t">
+                            <input type="checkbox" id="profile-marketing" class="h-4 w-4 text-blue-600 border-gray-300 rounded" ${user.marketing ? 'checked' : ''}>
+                            <label for="profile-marketing" class="ml-2 block text-sm text-gray-900">
+                                Subscribe to marketing emails
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-primary bg-blue-600 hover:bg-blue-700 p-3 w-full">Save Changes</button>
+                    </form>
+                </div>
+            `;
+        }
+
+        function renderAddressesView() {
+            const addresses = mockData.addresses;
+            
+            const addressListHtml = addresses.map(addr => `
+                <div class="bg-white p-5 rounded-xl shadow-lg border-l-4 ${addr.default ? 'border-green-500' : 'border-gray-200'}">
+                    <div class="flex justify-between items-start mb-2">
+                        <h4 class="text-lg font-bold text-gray-800">${addr.name} (${addr.type})</h4>
+                        ${addr.default ? '<span class="text-xs font-semibold px-2 py-0.5 bg-green-100 text-green-700 rounded-full">DEFAULT</span>' : ''}
+                    </div>
+                    <p class="text-gray-600 text-sm">${addr.street}</p>
+                    <p class="text-gray-600 text-sm mb-4">${addr.city}, ${addr.zip}</p>
+                    <div class="space-x-2">
+                        <button onclick="showEditAddressModal(${addr.id})" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Edit</button>
+                        <button onclick="showMessageBox('Action Blocked', 'Simulated deletion of address ID: ${addr.id}', true)" class="text-sm text-red-600 hover:text-red-800 font-medium">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+
+            DASHBOARD_CONTENT.innerHTML = `
+                <div class="space-y-6">
+                    <button onclick="showAddAddressModal()" class="btn-primary bg-indigo-600 hover:bg-indigo-700 text-sm px-4 py-2 flex items-center">
+                        <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i> Add New Address
+                    </button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        ${addressListHtml}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderOrdersView() {
+            const orders = mockData.orders;
+            const orderListHtml = orders.map(order => `
+                <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg border border-gray-100 flex justify-between items-center flex-wrap gap-4">
+                    <div>
+                        <h4 class="font-bold text-gray-900">Order ID: ${order.id}</h4>
+                        <p class="text-sm text-gray-500">Placed on: ${order.date}</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="font-semibold text-lg text-green-600">$${order.total.toFixed(2)}</p>
+                        <p class="text-xs text-gray-500">${order.items} Items</p>
+                    </div>
+                    <div class="text-center">
+                        <span class="text-sm font-semibold px-3 py-1 rounded-full 
+                            ${order.status === 'Delivered' ? 'bg-green-100 text-green-700' : 
+                            order.status === 'Shipped' ? 'bg-blue-100 text-blue-700' : 
+                            'bg-yellow-100 text-yellow-700'}">
+                            ${order.status}
+                        </span>
+                    </div>
+                    <button onclick="showMessageBox('Details', 'Viewing details for Order ID: ${order.id}', false)" class="text-sm text-blue-600 hover:text-blue-800 font-medium">View Details</button>
+                </div>
+            `).join('');
+
+            DASHBOARD_CONTENT.innerHTML = `
+                <div class="space-y-4">
+                    <h3 class="text-xl font-bold text-gray-800">Past Orders</h3>
+                    <p class="text-gray-600">You have ${orders.length} orders in your history.</p>
+                    ${orderListHtml}
+                </div>
+            `;
+        }
+
+        function renderPaymentsView() {
+            const payments = mockData.paymentOptions;
+            const paymentListHtml = payments.map(p => `
+                <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-100 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <i data-lucide="${p.type.toLowerCase().includes('visa') ? 'credit-card' : p.type.toLowerCase().includes('mastercard') ? 'credit-card' : 'wallet'}" class="w-6 h-6 text-gray-500"></i>
+                        <div>
+                            <p class="font-bold text-gray-800">${p.type}</p>
+                            <p class="text-sm text-gray-600">${p.last4 ? `Ends in ${p.last4} / Exp: ${p.expiry || 'N/A'}` : 'Digital Account'}</p>
+                        </div>
+                    </div>
+                    <div class="space-x-2">
+                        <button onclick="showAddPaymentOptionModal(${p.id})" class="text-sm text-blue-600 hover:text-blue-800 font-medium">Edit</button>
+                        <button onclick="showMessageBox('Action Blocked', 'Simulated deletion of payment option ${p.id}', true)" class="text-sm text-red-600 hover:text-red-800 font-medium">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            DASHBOARD_CONTENT.innerHTML = `
+                <div class="space-y-6">
+                    <button onclick="showAddPaymentOptionModal(null)" class="btn-primary bg-indigo-600 hover:bg-indigo-700 text-sm px-4 py-2 flex items-center">
+                        <i data-lucide="plus-circle" class="w-4 h-4 mr-2"></i> Add New Card
+                    </button>
+                    <div class="space-y-4">
+                        ${paymentListHtml}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderWalletView() {
+            const balance = mockData.walletBalance;
+            const history = mockData.walletHistory;
+
+            const historyHtml = history.sort((a, b) => new Date(b.date) - new Date(a.date)).map(tx => `
+                <div class="flex justify-between items-center py-2 border-b border-gray-100">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="${tx.type === 'Top-up' ? 'arrow-up-circle' : tx.type === 'Refund' ? 'undo' : 'arrow-down-circle'}" class="w-5 h-5 ${tx.type === 'Purchase' ? 'text-red-500' : 'text-green-500'}"></i>
+                        <span class="font-medium text-gray-800">${tx.type}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="font-bold ${tx.amount > 0 ? 'text-green-600' : 'text-red-600'}">$${tx.amount.toFixed(2)}</span>
+                        <p class="text-xs text-gray-500">${tx.date}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            DASHBOARD_CONTENT.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Wallet Balance Card -->
+                    <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-xl">
+                        <div class="flex justify-between items-center">
+                            <p class="text-sm font-light uppercase tracking-wider">KongShop Wallet Balance</p>
+                            <i data-lucide="wallet-2" class="w-8 h-8 opacity-75"></i>
+                        </div>
+                        <h2 class="text-5xl font-extrabold mt-2">$${balance.toFixed(2)}</h2>
+                        <div class="mt-4 flex space-x-3">
+                            <button onclick="showWalletActionModal('topup')" class="bg-white text-indigo-600 text-sm font-semibold px-4 py-2 rounded-full hover:bg-gray-100 transition">Top-up</button>
+                            <button onclick="showWalletActionModal('refund')" class="bg-indigo-500 text-white text-sm font-semibold px-4 py-2 rounded-full hover:bg-indigo-400 transition">Refund Request</button>
+                        </div>
+                    </div>
+
+                    <!-- Transaction History -->
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <h3 class="text-xl font-bold mb-4 border-b pb-2 text-gray-800">Transaction History</h3>
+                        <div class="space-y-1">
+                            ${historyHtml || '<p class="text-gray-500 text-center py-4">No recent transactions.</p>'}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderReturnsCancellationsView(type) {
+            const data = type === 'returns' ? mockData.returns : mockData.cancellations;
+            const title = type === 'returns' ? 'My Returns' : 'My Cancellations';
+            const headerFields = type === 'returns' ? ['RMA ID', 'Order ID', 'Date', 'Reason', 'Status'] : ['Ref ID', 'Order ID', 'Date', 'Reason'];
+
+            const tableRows = data.map(item => `
+                <tr class="hover:bg-gray-50 border-b">
+                    <td class="px-6 py-4 font-medium text-gray-900">${item.id}</td>
+                    <td class="px-6 py-4 text-gray-600">${item.orderId}</td>
+                    <td class="px-6 py-4 text-gray-600">${item.date}</td>
+                    <td class="px-6 py-4 text-gray-600">${item.reason}</td>
+                    ${item.status ? `<td class="px-6 py-4"><span class="text-xs font-semibold px-2 py-1 rounded-full ${item.status.includes('Pending') ? 'bg-yellow-100 text-yellow-700' : 'bg-red-100 text-red-700'}">${item.status}</span></td>` : ''}
+                </tr>
+            `).join('');
+
+            DASHBOARD_CONTENT.innerHTML = `
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-bold mb-4 text-gray-800">${title} (${data.length})</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead>
+                                <tr class="bg-gray-50">
+                                    ${headerFields.map(field => `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${field}</th>`).join('')}
+                                    ${type === 'returns' ? '<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>' : ''}
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                ${tableRows || '<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No records found.</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                    ${type === 'returns' ? '<button onclick="showMessageBox(\'Feature Note\', \'Simulated start a new return process.\', false)" class="mt-6 btn-primary bg-yellow-600 hover:bg-yellow-700 text-sm px-4 py-2">Start New Return</button>' : ''}
+                </div>
+            `;
+        }
+        
+        function showEditAddressModal(id) {
+             // Implementation for editing address (form rendering not shown for brevity, but required to be implemented in a full app)
+            const addressToEdit = mockData.addresses.find(a => a.id === id);
+            if (!addressToEdit) return;
+
+            const content = `
+                <form onsubmit="event.preventDefault(); handleSaveAddress(event, ${addressToEdit.id});" class="space-y-4">
+                    <div>
+                        <label for="address-name" class="block text-sm font-medium text-gray-700 mb-1">Address Label (e.g., Home, Work)</label>
+                        <input type="text" id="address-name" class="input-style" value="${addressToEdit.name}" required>
+                    </div>
+                    <div>
+                        <label for="address-type" class="block text-sm font-medium text-gray-700 mb-1">Address Type</label>
+                        <select id="address-type" class="input-style">
+                            <option value="Shipping" ${addressToEdit.type === 'Shipping' ? 'selected' : ''}>Shipping</option>
+                            <option value="Billing" ${addressToEdit.type === 'Billing' ? 'selected' : ''}>Billing</option>
+                            <option value="Both" ${addressToEdit.type === 'Both' ? 'selected' : ''}>Both</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="address-street" class="block text-sm font-medium text-gray-700 mb-1">Street Address</label>
+                        <input type="text" id="address-street" class="input-style" value="${addressToEdit.street}" required>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="address-default" class="h-4 w-4 text-blue-600 border-gray-300 rounded" ${addressToEdit.default ? 'checked' : ''}>
+                        <label for="address-default" class="ml-2 block text-sm text-gray-900">
+                            Set as Default
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-primary bg-green-600 hover:bg-green-700 p-3 w-full">Save Changes</button>
+                </form>
+            `;
+            showSubModal(`Edit Address: ${addressToEdit.name}`, content);
+        }
+
+        function showAddAddressModal() {
+            const content = `
+                <form onsubmit="event.preventDefault(); handleSaveAddress(event, null);" class="space-y-4">
+                    <div>
+                        <label for="address-name" class="block text-sm font-medium text-gray-700 mb-1">Address Label (e.g., Home, Work)</label>
+                        <input type="text" id="address-name" class="input-style" required>
+                    </div>
+                    <div>
+                        <label for="address-type" class="block text-sm font-medium text-gray-700 mb-1">Address Type</label>
+                        <select id="address-type" class="input-style">
+                            <option value="Shipping">Shipping</option>
+                            <option value="Billing">Billing</option>
+                            <option value="Both">Both</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="address-street" class="block text-sm font-medium text-gray-700 mb-1">Street Address</label>
+                        <input type="text" id="address-street" class="input-style" required>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="address-default" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                        <label for="address-default" class="ml-2 block text-sm text-gray-900">
+                            Set as Default
+                        </label>
+                    </div>
+                    <!-- Simplified other fields -->
+                    <p class="text-xs text-gray-500">Note: City, Zip, and State simulated for this demo.</p>
+                    <button type="submit" class="btn-primary bg-green-600 hover:bg-green-700 p-3 w-full">Save Address</button>
+                </form>
+            `;
+            showSubModal("Add New Address", content);
+        }
+
+        function showAddPaymentOptionModal(id = null) {
+            const payment = id ? mockData.paymentOptions.find(p => p.id === id) : {};
+            const title = id ? `Edit Payment (${payment.type})` : 'Add New Payment Option';
+            
+            const content = `
+                <form onsubmit="event.preventDefault(); handleSavePaymentOption(event, ${id});" class="space-y-4">
+                    
+                    <div class="flex space-x-4">
+                        <div class="w-1/2">
+                            <label for="card-type" class="block text-sm font-medium text-gray-700 mb-1">Card Type</label>
+                            <select id="card-type" class="input-style">
+                                <option value="Visa" ${payment.type === 'Visa' ? 'selected' : ''}>Visa</option>
+                                <option value="Mastercard" ${payment.type === 'Mastercard' ? 'selected' : ''}>Mastercard</option>
+                                <option value="bKash (Simulated)" ${payment.type === 'bKash (Simulated)' ? 'selected' : ''}>Digital Wallet</option>
+                                <option value="Other" ${!payment.type || (payment.type !== 'Visa' && payment.type !== 'Mastercard' && payment.type !== 'bKash (Simulated)') ? 'selected' : ''}>Other</option>
+                            </select>
+                        </div>
+                        <div class="w-1/2">
+                            <label for="last-four" class="block text-sm font-medium text-gray-700 mb-1">Last 4 Digits</label>
+                            <input type="text" id="last-four" class="input-style" maxlength="4" pattern="[0-9]{4}" value="${payment.last4 || ''}" required>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="expiry-date" class="block text-sm font-medium text-gray-700 mb-1">Expiry (MM/YY)</label>
+                        <input type="text" id="expiry-date" class="input-style" placeholder="01/25" maxlength="5" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="MM/YY format" oninput="formatExpiry(this)" value="${payment.expiry || ''}">
+                    </div>
+
+                    <button type="submit" class="btn-primary bg-green-600 hover:bg-green-700 p-3 w-full">${id ? 'Update Card' : 'Save Card'}</button>
+                </form>
+            `;
+            showSubModal(title, content);
+        }
+        
+        function handleSaveAddress(event, id = null) {
+            const addressType = document.getElementById('address-type').value;
+            const addressName = document.getElementById('address-name').value;
+            const addressStreet = document.getElementById('address-street').value;
+            const isDefault = document.getElementById('address-default').checked;
+            
+            if (!addressName || !addressStreet) {
+                showMessageBox("Error", "Please fill in all address fields.", true);
+                return;
+            }
+
+            let message = "Address updated successfully!";
+            let savedId;
+
+            if (id === null) {
+                // Add New
+                savedId = mockData.addresses.length > 0 ? Math.max(...mockData.addresses.map(a => a.id)) + 1 : 1;
+                const newAddress = {
+                    id: savedId,
+                    type: addressType,
+                    name: addressName,
+                    street: addressStreet,
+                    city: 'Mock City',
+                    zip: '00000',
+                    default: isDefault
+                };
+                mockData.addresses.push(newAddress);
+                message = "New address saved successfully!";
+            } else {
+                // Edit Existing
+                savedId = id;
+                const addressIndex = mockData.addresses.findIndex(a => a.id === id);
+                if (addressIndex !== -1) {
+                    mockData.addresses[addressIndex] = {
+                        ...mockData.addresses[addressIndex],
+                        type: addressType,
+                        name: addressName,
+                        street: addressStreet,
+                        default: isDefault
+                    };
+                } else {
+                    showMessageBox("Error", "Failed to find address for update.", true);
+                    return;
+                }
+            }
+            
+            // Handle default status logic (ensure only one is default)
+            if (isDefault) {
+                mockData.addresses.forEach(addr => {
+                    if (addr.id !== savedId) {
+                        addr.default = false;
+                    }
+                });
+            }
+
+            hideSubModal();
+            setDashboardView('addresses');
+            showMessageBox("Success", message);
+        }
+
+        function handleSavePaymentOption(event, id) {
+            const cardType = document.getElementById('card-type').value;
+            const lastFour = document.getElementById('last-four').value.trim();
+            const expiry = document.getElementById('expiry-date').value.trim();
+            
+            if (lastFour.length !== 4 || (cardType !== 'Other' && expiry.length !== 5 && expiry.length !== 0)) {
+                showMessageBox("Validation Error", "Please ensure last 4 digits (4 chars) and Expiry (MM/YY) are correct.", true);
+                return;
+            }
+
+            let message;
+
+            if (id === null) {
+                // Add new payment option
+                const newId = mockData.paymentOptions.length > 0 ? Math.max(...mockData.paymentOptions.map(p => p.id)) + 1 : 1;
+                const newPayment = {
+                    id: newId,
+                    type: cardType,
+                    last4: lastFour,
+                    expiry: expiry
+                };
+                mockData.paymentOptions.push(newPayment);
+                message = `${cardType} ending in ${lastFour} added successfully!`;
+            } else {
+                // Edit existing payment option
+                const paymentIndex = mockData.paymentOptions.findIndex(p => p.id === id);
+                if (paymentIndex !== -1) {
+                    mockData.paymentOptions[paymentIndex] = {
+                        ...mockData.paymentOptions[paymentIndex],
+                        type: cardType,
+                        last4: lastFour,
+                        expiry: expiry
+                    };
+                    message = "Payment option updated successfully!";
+                } else {
+                     showMessageBox("Error", "Could not find payment option for update.", true);
+                     return;
+                }
+            }
+
+            hideSubModal();
+            setDashboardView('payments'); // Re-render payment view
+            showMessageBox("Success", message);
+        }
+        
+        function handleSimulateWalletAction(type, amount) {
+            if (type === 'topup') {
+                mockData.walletBalance += amount;
+                mockData.walletHistory.push({ id: mockData.walletHistory.length + 1, type: 'Top-up', amount: amount, date: new Date().toISOString().slice(0, 10) });
+                showMessageBox("Success", `$${amount.toFixed(2)} added to your wallet!`);
+            } else if (type === 'refund') {
+                // Simulate refunding 50% of an old purchase
+                mockData.walletBalance += amount;
+                mockData.walletHistory.push({ id: mockData.walletHistory.length + 1, type: 'Refund', amount: amount, date: new Date().toISOString().slice(0, 10) });
+                showMessageBox("Success", `$${amount.toFixed(2)} refunded to your wallet!`);
+            }
+            hideSubModal();
+            setDashboardView('wallet'); // Re-render wallet view
+        }
+
+        function showWalletActionModal(type) {
+            const isTopup = type === 'topup';
+            const title = isTopup ? "Top-up Wallet" : "Simulate Refund Request";
+            const amountLabel = isTopup ? "Top-up Amount ($)" : "Refund Amount ($)";
+            const buttonText = isTopup ? "Confirm Top-up" : "Simulate Refund";
+            const handler = isTopup ? 'handleSimulateWalletAction("topup", parseFloat(document.getElementById("wallet-amount").value))' : 'handleSimulateWalletAction("refund", 20.00)';
+            
+            const content = `
+                <form onsubmit="event.preventDefault(); ${handler};" class="space-y-4">
+                    <div>
+                        <label for="wallet-amount" class="block text-sm font-medium text-gray-700 mb-1">${amountLabel}</label>
+                        <input type="number" id="wallet-amount" class="input-style" value="${isTopup ? '50.00' : '20.00'}" step="0.01" min="1" ${isTopup ? 'required' : 'disabled'}>
+                    </div>
+                    ${!isTopup ? '<p class="text-sm text-yellow-600">Note: This action simulates a $20.00 refund to your wallet for demonstration purposes.</p>' : ''}
+                    <button type="submit" class="btn-primary bg-indigo-600 hover:bg-indigo-700 p-3 w-full">${buttonText}</button>
+                </form>
+            `;
+            showSubModal(title, content);
+        }
+
+        // --- Cart Operations ---
+
+        function addToCart(id, name, price) {
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.qty += 1;
+            } else {
+                cart.push({ id, name, price, qty: 1 });
+            }
+
+            updateCartCount();
+            showMessageBox("Added to Cart", `${name} added successfully! Total items: ${paymentState.orderDetails.itemCount}`, false);
+            if (!CART_MODAL.classList.contains('hidden')) {
+                renderUI();
+            }
+        }
+
+        function updateItemQuantity(id, change) {
+            const itemIndex = cart.findIndex(item => item.id === id);
+            if (itemIndex > -1) {
+                cart[itemIndex].qty += change;
+                if (cart[itemIndex].qty <= 0) {
+                    cart.splice(itemIndex, 1);
+                }
+            }
+            updateCartCount();
+            renderUI();
+        }
+
+        function removeItem(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartCount();
+            renderUI();
+        }
+
+        function showCartModal() {
+            if (paymentState.orderDetails.itemCount === 0) {
+                 showMessageBox("Cart Empty", "Your shopping bag is empty. Add some items first!", true);
+                 return;
+            }
+            paymentState.view = 'cart';
+            renderUI();
+            CART_MODAL.classList.remove('hidden');
+            CART_MODAL.classList.add('flex');
+            setTimeout(() => {
+                CHECKOUT_CONTAINER.classList.remove('scale-95', 'opacity-0');
+                CHECKOUT_CONTAINER.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function hideCartModal() {
+            CHECKOUT_CONTAINER.classList.remove('scale-100', 'opacity-100');
+            CHECKOUT_CONTAINER.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                CART_MODAL.classList.add('hidden');
+                CART_MODAL.classList.remove('flex');
+            }, 300);
+        }
+        
+        // --- Navigation Functions (FIXED) ---
+        function goToPayment() {
+            if (!user.isLoggedIn) {
+                // Set a flag to remember the user tried to checkout
+                localStorage.setItem('pendingCheckout', 'true');
+
+                showMessageBox("Login Required", "Please sign in or create an account to proceed to payment.", true);
+                
+                // Hide the cart modal smoothly before showing auth modal
+                hideCartModal(); 
+                
+                // Show the authentication modal immediately
+                showAuthModal('login'); 
+                return;
+            }
+            
+            // Proceed to payment only if logged in
+            paymentState.view = 'payment';
+            renderUI();
+        }
+
+        function goToCart() {
+            paymentState.view = 'cart';
+            renderUI();
+        }
+
+        // --- Payment Handlers ---
+
+        function selectPaymentMethod(method) {
+            paymentState.paymentMethod = method;
+            paymentState.orderDetails.paymentMethodDisplay = method === 'card' ? 'Credit/Debit Card' : 'Cash on Delivery (COD)';
+            renderPaymentView();
+        }
+
+        function handlePayment() {
+            const total = paymentState.orderDetails.total.toFixed(2);
+            
+            if (paymentState.paymentMethod === 'card') {
+                const cardNumber = document.getElementById('card-number');
+                const cardName = document.getElementById('card-name');
+                const expiry = document.getElementById('expiry');
+                const cvv = document.getElementById('cvv');
+
+                if (!cardNumber.value || !cardName.value || !expiry.value || !cvv.value || 
+                    !cardNumber.checkValidity() || !expiry.checkValidity() || !cvv.checkValidity()) {
+                    showMessageBox("Validation Error", "Please fill out all card details correctly.", true);
+                    return;
+                }
+            }
+            
+            paymentState.orderDetails.orderId = generateOrderId();
+            mockData.orders.push({
+                id: paymentState.orderDetails.orderId,
+                date: new Date().toISOString().slice(0, 10),
+                total: paymentState.orderDetails.total,
+                status: 'Processing',
+                items: paymentState.orderDetails.itemCount
+            });
+            
+            cart = []; 
+            updateCartCount();
+            paymentState.view = 'confirmation';
+
+            CHECKOUT_VIEW.innerHTML = `
+                <div class="text-center p-8">
+                    <div class="w-10 h-10 border-4 border-indigo-400 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+                    <h3 class="text-xl font-semibold text-gray-800">Processing Payment...</h3>
+                    <p class="text-gray-500">Total: $${total}</p>
+                </div>
+            `;
+            setTimeout(() => {
+                renderUI();
+            }, 1500);
+        }
+
+        // --- Input Formatting Helpers (UX) ---
+        function formatCardNumber(input) {
+            let value = input.value.replace(/\D/g, ''); 
+            value = value.replace(/(\d{4}(?!\s))/g, '$1 ').trim(); 
+            input.value = value;
+        }
+
+        function formatExpiry(input) {
+            let value = input.value.replace(/\D/g, ''); 
+            if (value.length > 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            input.value = value;
+        }
+
+
+        // --- View Rendering (Cart, Payment, Confirmation) ---
+
+        function renderCartView() {
+            CHECKOUT_TITLE.textContent = 'Shopping Cart';
+            calculateCartTotals();
+            const { subtotal, shipping, total } = paymentState.orderDetails;
+
+            let cartItemsHtml = cart.map(item => `
+                <div class="flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+                    <div class="flex items-center space-x-4">
+                        <img src="https://placehold.co/60x60/d6d3d1/1c1c1c?text=Item" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
+                        <div>
+                            <p class="font-semibold text-gray-900">${item.name}</p>
+                            <p class="text-sm text-gray-500">$${item.price.toFixed(2)}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center border border-gray-300 rounded-lg">
+                            <button onclick="updateItemQuantity('${item.id}', -1)" class="p-1.5 text-gray-600 hover:bg-gray-100 rounded-l-lg"><i data-lucide="minus" class="w-4 h-4"></i></button>
+                            <span class="px-3 text-sm font-medium">${item.qty}</span>
+                            <button onclick="updateItemQuantity('${item.id}', 1)" class="p-1.5 text-gray-600 hover:bg-gray-100 rounded-r-lg"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                        </div>
+                        <span class="font-semibold text-gray-900 w-16 text-right">$${(item.price * item.qty).toFixed(2)}</span>
+                        <button onclick="removeItem('${item.id}')" class="text-red-500 hover:text-red-700 p-1">
+                             <i data-lucide="x" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            CHECKOUT_VIEW.innerHTML = `
+                ${cart.length === 0 ? `
+                    <div class="text-center py-10">
+                        <i data-lucide="shopping-bag" class="w-12 h-12 mx-auto text-gray-400 mb-4"></i>
+                        <p class="text-xl font-medium text-gray-600">Your cart is empty.</p>
+                        <p class="text-gray-400 mt-2">Time to find your next nostalgia outfit.</p>
+                    </div>
+                ` : `
+                    <div class="mb-6">
+                        ${cartItemsHtml}
+                    </div>
+
+                    <div class="bg-gray-50 p-6 rounded-xl space-y-3">
+                        <h3 class="text-xl font-bold text-gray-800 border-b pb-2">Order Summary</h3>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Subtotal (${paymentState.orderDetails.itemCount} Items)</span>
+                            <span>$${subtotal.toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between text-gray-600 border-b pb-3">
+                            <span>Shipping (Standard)</span>
+                            <span>${shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
+                        </div>
+                        <div class="flex justify-between font-extrabold text-2xl text-gray-900 pt-3">
+                            <span>Total Due</span>
+                            <span>$${total.toFixed(2)}</span>
+                        </div>
+                    </div>
+
+                    <button onclick="goToPayment()" class="btn-primary w-full p-4 mt-6 text-white text-lg font-semibold bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300">
+                        Proceed to Payment
+                    </button>
+                `}
+                <button onclick="hideCartModal()" class="w-full text-center mt-4 text-sm text-gray-500 hover:text-gray-900 transition">Continue Shopping</button>
+            `;
+            lucide.createIcons();
+        }
+
+        function renderPaymentView() {
+            CHECKOUT_TITLE.textContent = 'Secure Checkout';
+            const { total } = paymentState.orderDetails;
+            
+            const cardFormVisibility = paymentState.paymentMethod === 'card' ? 'block' : 'hidden';
+            const cardSelectedClass = paymentState.paymentMethod === 'card' ? 'selected bg-blue-50' : 'bg-white hover:bg-gray-50';
+            const codSelectedClass = paymentState.paymentMethod === 'cod' ? 'selected bg-blue-50' : 'bg-white hover:bg-gray-50';
+
+
+            CHECKOUT_VIEW.innerHTML = `
+                <div class="mb-6">
+                    <button onclick="goToCart()" class="text-sm text-gray-500 hover:text-gray-900 flex items-center mb-6">
+                             <i data-lucide="chevron-left" class="w-4 h-4 mr-1"></i> Back to Cart
+                    </button>
+
+                    <!-- Order Summary -->
+                    <div class="bg-indigo-50 p-4 rounded-lg mb-6 shadow-inner">
+                        <h3 class="text-lg font-semibold text-indigo-700 mb-2">Order Summary</h3>
+                        <div class="flex justify-between font-bold text-xl text-indigo-800">
+                            <span>Total Due</span>
+                            <span>$${total.toFixed(2)}</span>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method Selection -->
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">Select Payment Method</h3>
+                    <div class="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4 mb-6">
+                        
+                        <!-- Card Option -->
+                        <div onclick="selectPaymentMethod('card')"
+                            class="payment-option p-4 flex-1 rounded-lg flex items-center justify-between ${cardSelectedClass}">
+                            <span class="font-medium text-gray-800">Card Payment</span>
+                            <i data-lucide="credit-card" class="h-6 w-6 text-blue-600"></i>
+                        </div>
+
+                        <!-- COD Option -->
+                        <div onclick="selectPaymentMethod('cod')"
+                            class="payment-option p-4 flex-1 rounded-lg flex items-center justify-between ${codSelectedClass}">
+                            <span class="font-medium text-gray-800">Cash on Delivery</span>
+                            <i data-lucide="wallet" class="h-6 w-6 text-green-600"></i>
+                        </div>
+                    </div>
+
+                    <!-- Payment Form Wrapper -->
+                    <form id="payment-form" onsubmit="event.preventDefault(); handlePayment();" class="space-y-4">
+                        
+                        <!-- Card Details - Only visible when 'card' is selected -->
+                        <div id="card-details" class="${cardFormVisibility} transition-all duration-300 space-y-4 pt-4 border-t">
+                            <h4 class="text-lg font-semibold text-gray-700">Card Details</h4>
+                            <div>
+                                <label for="card-number" class="block text-sm font-medium text-gray-700 mb-1">Card Number</label>
+                                <input type="text" id="card-number" class="input-style" placeholder="**** **** **** 4242" maxlength="19" pattern="[0-9]{4} ?[0-9]{4} ?[0-9]{4} ?[0-9]{4}" title="16 digits" oninput="formatCardNumber(this)" value="4242 4242 4242 4242">
+                            </div>
+
+                            <div>
+                                <label for="card-name" class="block text-sm font-medium text-gray-700 mb-1">Name on Card</label>
+                                <input type="text" id="card-name" class="input-style" placeholder="John Doe" value="John Doe">
+                            </div>
+
+                            <div class="flex space-x-4">
+                                <div class="w-1/2">
+                                    <label for="expiry" class="block text-sm font-medium text-gray-700 mb-1">Expiry (MM/YY)</label>
+                                    <input type="text" id="expiry" class="input-style" placeholder="01/25" maxlength="5" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" title="MM/YY format" oninput="formatExpiry(this)" value="12/26">
+                                </div>
+                                <div class="w-1/2">
+                                    <label for="cvv" class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+                                    <input type="password" id="cvv" class="input-style" placeholder="123" maxlength="3" pattern="[0-9]{3}" value="123">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- COD Notice - Only visible when 'cod' is selected -->
+                        <div class="${paymentState.paymentMethod === 'cod' ? 'block' : 'hidden'} bg-yellow-50 p-4 rounded-lg text-yellow-800 transition-all duration-300 border border-yellow-200">
+                            <p class="font-medium">You have selected Cash on Delivery. Please have $${total.toFixed(2)} ready upon delivery.</p>
+                        </div>
+
+
+                        <button type="submit" class="btn-primary w-full p-3 mt-6 text-white text-xl font-semibold bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">
+                            Confirm Order & Pay $${total.toFixed(2)}
+                        </button>
+                    </form>
+                </div>
+            `;
+             lucide.createIcons();
+        }
+
+        function renderConfirmationView() {
+            CHECKOUT_TITLE.textContent = 'Order Placed';
+            const { total, orderId, paymentMethodDisplay } = paymentState.orderDetails;
+
+            CHECKOUT_VIEW.innerHTML = `
+                <div class="text-center p-4">
+                    <i data-lucide="check-circle" class="h-20 w-20 mx-auto text-green-500 mb-4 animate-pulse"></i>
+                    <h2 class="text-4xl font-extrabold text-green-700 mb-2">Order Confirmed!</h2>
+                    <p class="text-gray-600 mb-6">Thank thank you for your purchase. Your order is now being processed.</p>
+
+                    <div class="bg-gray-50 p-5 rounded-lg text-left mb-6 shadow-inner">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-500 font-medium">Order ID:</span>
+                            <span class="text-gray-900 font-semibold">${orderId}</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-500 font-medium">Order Total:</span>
+                            <span class="text-green-600 font-bold text-xl">$${total.toFixed(2)}</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-500 font-medium">Payment Method:</span>
+                            <span class="text-gray-900 font-semibold">${paymentMethodDisplay}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 font-medium">Delivery:</span>
+                            <span class="text-gray-900">Estimated 3-5 days</span>
+                        </div>
+                    </div>
+
+                    <p class="text-sm text-gray-500 mb-8">A receipt has been sent to your email address.</p>
+
+                    <button onclick="hideCartModal()" class="btn-primary w-full p-4 text-white text-lg font-semibold bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300">
+                        Continue Shopping
+                    </button>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+
+        // --- Main Rendering Logic ---
+
+        function renderUI() {
+            if (paymentState.view === 'cart') {
+                renderCartView();
+            } else if (paymentState.view === 'payment') {
+                renderPaymentView();
+            } else if (paymentState.view === 'confirmation') {
+                renderConfirmationView();
+            }
+        }
+
+        // --- Initial Setup ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            updateCartCount();
+            // Ensure updateHeaderAuthUI is called before any other function that relies on the UI state it sets
+            updateHeaderAuthUI(); 
+
+            // Mobile Menu Toggle Logic
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', () => {
+                    const isHidden = mobileMenu.classList.contains('hidden');
+                    // Find the SVG icon (which replaces the <i> tag)
+                    const menuIcon = mobileMenuButton.querySelector('svg'); 
+
+                    if (isHidden) {
+                        mobileMenu.classList.remove('hidden');
+                        if (menuIcon) {
+                            menuIcon.setAttribute('data-lucide', 'x');
+                            lucide.createIcons(); // Re-render icon to 'x'
+                        }
+                    } else {
+                        mobileMenu.classList.add('hidden');
+                        if (menuIcon) {
+                            menuIcon.setAttribute('data-lucide', 'menu');
+                            lucide.createIcons(); // Re-render icon to 'menu'
+                        }
+                    }
+                });
+
+                // Close mobile menu when a link is clicked
+                mobileMenu.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.add('hidden');
+                        const menuIcon = mobileMenuButton.querySelector('svg');
+                        if (menuIcon) {
+                            menuIcon.setAttribute('data-lucide', 'menu');
+                            lucide.createIcons();
+                        }
+                    });
+                });
+            }
+            
+            // Simple smooth scroll for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const targetId = this.getAttribute('href');
+                    
+                    if (targetId === '#' || targetId === '') {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        e.preventDefault();
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+</html>
